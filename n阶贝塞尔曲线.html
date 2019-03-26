@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>path</title>
+  <script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+  <script src="./bezier.js" charset="utf-8"></script>
+</head>
+<body>
+</body>
+<script>
+  var lineGenerator = d3.line()
+  .x(function(d) {
+    return d[0];
+  })
+  .y(function(d) {
+    return d[1];
+  });
+  let arr = [{"x":30,"y":41.19999694824219},{"x":116,"y":43.19999694824219},{"x":176,"y":95.19999694824219},{"x":152,"y":139.1999969482422},{"x":91,"y":127.19999694824219},{"x":32,"y":86.19999694824219},{"x":22,"y":51.19999694824219}]
+  var points = new Bezier(arr, 500).bezierArr
+  var pathData = lineGenerator(points)
+  var svg = d3.select('body').append('svg').attr('width', 1500).attr('height', 1000).append('g').attr('transform','translate(250, 250)')
+  let data = new Array(24)
+  svg.selectAll('path').data(data).enter().append('path')
+  .attr('d', pathData)
+  .attr('stroke', 'red')
+  .attr('fill', 'rgba(0,0,0,0)')
+  .style('transform', (d, i) => 'rotateZ('+i*15+'deg)')
+
+  var circle = svg.selectAll('circle').data(data).enter().append('circle')
+  .attr('class', 'x-clicle')
+  .attr('r', 10).attr('cx', 0).attr('cy', 0).attr('fill', 'red').style('transform', (d, i) => 'rotateZ('+i*15+'deg)')
+  let index = 0
+  let timer = setInterval(() => {
+    if (index >= 500) {
+      index = 0
+    }
+    circle.attr('cx', points[index][0]).attr('cy', points[index][1])
+    index++
+  }, 10)
+</script>
+</html>
